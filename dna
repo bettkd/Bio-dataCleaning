@@ -1,0 +1,155 @@
+#! usr/bin/perl
+# Cleaning DNA Data Module
+# @Dominic_Bett
+
+use strict;
+use warnings;
+
+####################################################
+# Subroutine readFileToArray
+####################################################	
+sub readFileToArray{
+	my($fName) = @_;
+	unless(open(RF, $fName)){
+		print "Could not read the file: $fName.\n";
+		exit;
+	}
+	
+	my @input = <RF>;
+	chomp @input;
+
+	close RF;
+
+	return \@input;
+}
+
+####################################################
+# Subroutine readFileToHash
+####################################################
+sub readFileToHash{
+	my($fName) = @_;
+	my %aHash =();
+	open(RF, $fName) or die print "Could not read the file: $fName.\n";
+
+	while(<RF>){
+		my $inputLine = $_;
+		chomp $inputLine;
+
+		my @inputLine = split("\t", $inputLine);
+		$aHash {$inputLine[0]} = $inputLine[1];
+	}
+	close RF;
+	return \%aHash;
+}
+
+####################################################
+# Subroutine printArraySort
+####################################################
+sub printArraySort{
+	my($input_ref) = @_;
+	my @input = sort @$input_ref;
+
+	foreach my $element (@input){	
+		print "$element\n";
+	}
+	return;
+}
+
+####################################################
+# Subroutine printArrayUnsort
+####################################################
+sub printArrayUnsort{
+	my($input_ref) = @_;
+	my @input = @$input_ref;
+
+	for (my $i = 0; $i < scalar @input; $i++){	
+		print "$input[$i]\n";
+	}
+	return;
+}
+
+####################################################
+# Subroutine printHashSort
+#################################################### 
+sub printHashSort{
+	my($aHash_ref) = @_;
+	
+        foreach my $key (sort keys %$aHash_ref){
+                print "$key\t$$aHash_ref{$key}\n";
+        }
+}
+
+####################################################
+# Subroutine printHashUnsort
+####################################################
+sub printHashUnsort{
+	my($aHash_ref) = @_;
+	
+        foreach my $key (keys %$aHash_ref){
+                print "$key\t$$aHash_ref{$key}\n";
+        }
+}
+
+
+####################################################
+# Subroutine writeArraySort
+####################################################
+sub writeArraySort{
+	my($input, $aFile) = @_;
+
+	unless(open(WF, '>'.$aFile)){
+		print "Could not write to file: $aFile.\n";
+		exit;
+	}
+
+	foreach my $element (sort @$input){	
+		print WF "$element\n";
+	}
+
+	close WF;
+}
+
+####################################################
+# Subroutine writeArrayUnsort
+####################################################
+sub writeArrayUnsort{
+	my($input, $aFile) = @_;
+
+	unless(open(WF, '>'.$aFile)){
+		print "Could not write to file: $aFile.\n";
+		exit;
+	}
+
+	foreach my $element (@$input){	
+		print WF "$element\n";
+	}
+
+	close WF;
+}
+
+####################################################
+# Subroutine writeHashSort
+####################################################
+sub writeHashSort{
+	my($aHash_ref, $hFile) = @_;
+
+	open(WF, '>'.$hFile) || die print "Could not write to file: $hFile.\n";
+	
+	 foreach my $key (sort keys %$aHash_ref){
+                print WF "$key\t$$aHash_ref{$key}\n";
+        }
+}
+
+####################################################
+# Subroutine writeHashUnsort
+####################################################
+sub writeHashUnsort{
+	my($aHash_ref, $hFile) = @_;
+
+	open(WF, '>'.$hFile) || die print "Could not write to file: $hFile.\n";
+
+	 foreach my $key (keys %$aHash_ref){
+                print WF "$key\t$$aHash_ref{$key}\n";
+        }
+}
+1;
